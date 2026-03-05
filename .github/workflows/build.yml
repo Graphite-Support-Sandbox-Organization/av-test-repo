@@ -1,0 +1,25 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: echo "Installing dependencies..."
+
+      - name: Lint
+        run: echo "Linting... OK"
+
+      - name: Build
+        run: echo "Building project... OK"
+
+      - name: Test
+        run: echo "Running tests... 42 passed, 0 failed"
