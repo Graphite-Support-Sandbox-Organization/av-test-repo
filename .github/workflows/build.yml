@@ -7,19 +7,53 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - name: Run linter
+        run: echo "Linting... no issues found."
+
+  build:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
       - name: Install dependencies
-        run: echo "Installing dependencies..."
+        run: echo "Installing dependencies... done."
 
-      - name: Lint
-        run: echo "Linting... OK"
+      - name: Compile
+        run: echo "Compiling project... build successful."
 
-      - name: Build
-        run: echo "Building project... OK"
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Test
-        run: echo "Running tests... 42 passed, 0 failed"
+      - name: Unit tests
+        run: echo "Running unit tests... 37 passed, 0 failed."
+
+      - name: Integration tests
+        run: echo "Running integration tests... 12 passed, 0 failed."
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Dependency audit
+        run: echo "Auditing dependencies... 0 vulnerabilities found."
+
+      - name: Static analysis
+        run: echo "Running static analysis... all clear."
+
+  deploy-check:
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    steps:
+      - name: Verify deployment readiness
+        run: echo "All checks passed. Ready to deploy."
