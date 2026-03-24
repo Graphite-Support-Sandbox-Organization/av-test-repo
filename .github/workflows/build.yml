@@ -23,3 +23,21 @@ jobs:
 
       - name: Test
         run: echo "Running tests... 42 passed, 0 failed"
+
+      - name: Test (always fail)
+        run: exit 1
+
+  ci-status:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ always() }}
+    steps:
+      - run: |
+          if [ "${{ needs.build.result }}" = "failure" ] || [ "${{ needs.build.result }}" = "cancelled" ]; then
+            echo "Build failed or was cancelled."
+            exit 1
+          else
+            echo "Build passed."
+            exit 0
+          fi
